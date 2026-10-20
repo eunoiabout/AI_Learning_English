@@ -1,1 +1,240 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Present Perfect Continuous Quiz</title>
+
+  <style>
+    body {
+      font-family: Cambria, Georgia, serif;
+      background: #eaf6ff;
+      color: #233244;
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px #00000010;
+    }
+
+    h1 {
+      color: #2878b5;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #637386;
+    }
+
+    .question {
+      margin: 24px 0;
+      padding: 18px;
+      background: #f7fbff;
+      border: 1px solid #d7e2ec;
+      border-radius: 12px;
+    }
+
+    .question p {
+      font-weight: bold;
+    }
+
+    label {
+      display: block;
+      padding: 8px;
+      cursor: pointer;
+    }
+
+    input {
+      margin-right: 8px;
+    }
+
+    button {
+      background: #2878b5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      margin-top: 12px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #185b8d;
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 10px;
+      background: #fff3bd;
+      display: none;
+    }
+
+    .correct {
+      color: #187443;
+    }
+
+    .incorrect {
+      color: #b43d32;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <h1>Present Perfect Continuous</h1>
+    <p class="subtitle">
+      5-question grammar quiz
+    </p>
+
+    <form id="quizForm">
+
+      <section class="question">
+        <p>1. She _____ English for three years.</p>
+        <label><input type="radio" name="q1" value="a"> has been studying</label>
+        <label><input type="radio" name="q1" value="b"> have been studying</label>
+        <label><input type="radio" name="q1" value="c"> is studying</label>
+        <label><input type="radio" name="q1" value="d"> has studying</label>
+        <p id="feedback1"></p>
+      </section>
+
+      <section class="question">
+        <p>2. Which sentence emphasizes the duration of an activity?</p>
+        <label><input type="radio" name="q2" value="a"> I read yesterday.</label>
+        <label><input type="radio" name="q2" value="b"> I have been reading for two hours.</label>
+        <label><input type="radio" name="q2" value="c"> I will read tomorrow.</label>
+        <label><input type="radio" name="q2" value="d"> I am reading now.</label>
+        <p id="feedback2"></p>
+      </section>
+
+      <section class="question">
+        <p>3. They have been waiting _____ 9 a.m.</p>
+        <label><input type="radio" name="q3" value="a"> for</label>
+        <label><input type="radio" name="q3" value="b"> during</label>
+        <label><input type="radio" name="q3" value="c"> since</label>
+        <label><input type="radio" name="q3" value="d"> by</label>
+        <p id="feedback3"></p>
+      </section>
+
+      <section class="question">
+        <p>4. Which negative sentence is correct?</p>
+        <label><input type="radio" name="q4" value="a"> He haven't been sleeping well.</label>
+        <label><input type="radio" name="q4" value="b"> He hasn't been sleep well.</label>
+        <label><input type="radio" name="q4" value="c"> He hasn't been sleeping well.</label>
+        <label><input type="radio" name="q4" value="d"> He not has been sleeping well.</label>
+        <p id="feedback4"></p>
+      </section>
+
+      <section class="question">
+        <p>5. Choose the correct question.</p>
+        <label><input type="radio" name="q5" value="a"> How long you have been learning English?</label>
+        <label><input type="radio" name="q5" value="b"> How long have you been learning English?</label>
+        <label><input type="radio" name="q5" value="c"> How long have been you learning English?</label>
+        <label><input type="radio" name="q5" value="d"> How long are you been learning English?</label>
+        <p id="feedback5"></p>
+      </section>
+
+      <button type="button" onclick="checkAnswers()">
+        Submit Answers
+      </button>
+
+      <button type="reset" onclick="resetQuiz()">
+        Try Again
+      </button>
+    </form>
+
+    <div id="result" aria-live="polite"></div>
+  </main>
+
+  <script>
+    const answers = {
+      q1: {
+        answer: "a",
+        explanation: "Use has been + verb-ing with she, he, or it."
+      },
+      q2: {
+        answer: "b",
+        explanation: "The Present Perfect Continuous often emphasizes how long an activity has continued."
+      },
+      q3: {
+        answer: "c",
+        explanation: "Use since with a starting point in time. Use for with a duration."
+      },
+      q4: {
+        answer: "c",
+        explanation: "The negative structure is has not been + verb-ing."
+      },
+      q5: {
+        answer: "b",
+        explanation: "Use How long + have/has + subject + been + verb-ing."
+      }
+    };
+
+    function checkAnswers() {
+      let score = 0;
+
+      for (let i = 1; i <= 5; i++) {
+        const questionName = "q" + i;
+        const selected = document.querySelector(
+          'input[name="' + questionName + '"]:checked'
+        );
+        const feedback = document.getElementById("feedback" + i);
+
+        if (!selected) {
+          feedback.textContent = "Please select an answer.";
+          feedback.className = "incorrect";
+          continue;
+        }
+
+        if (selected.value === answers[questionName].answer) {
+          score++;
+          feedback.textContent =
+            "Correct! " + answers[questionName].explanation;
+          feedback.className = "correct";
+        } else {
+          feedback.textContent =
+            "Not quite. " + answers[questionName].explanation;
+          feedback.className = "incorrect";
+        }
+      }
+
+      const result = document.getElementById("result");
+      result.style.display = "block";
+      result.innerHTML =
+        "<h2>Your Score: " + score + " / 5</h2>" +
+        "<p>" +
+        (score === 5
+          ? "Excellent work!"
+          : score >= 3
+          ? "Good effort! Review your answers and try again."
+          : "Keep practicing. You can do it!") +
+        "</p>";
+
+      result.scrollIntoView({ behavior: "smooth" });
+    }
+
+    function resetQuiz() {
+      setTimeout(function () {
+        for (let i = 1; i <= 5; i++) {
+          const feedback = document.getElementById("feedback" + i);
+          feedback.textContent = "";
+          feedback.className = "";
+        }
+
+        const result = document.getElementById("result");
+        result.style.display = "none";
+        result.innerHTML = "";
+      }, 0);
+    }
+  </script>
+</body>
+</html>
+
