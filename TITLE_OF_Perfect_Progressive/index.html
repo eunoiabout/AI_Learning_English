@@ -7,234 +7,547 @@
   <title>Present Perfect Continuous Quiz</title>
 
   <style>
+    :root {
+      --blue: #2878b5;
+      --sky: #eaf6ff;
+      --yellow: #fff3bd;
+      --text: #233244;
+      --muted: #637386;
+      --border: #d7e2ec;
+      --green: #e8f7ee;
+      --red: #fff0ed;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
+      margin: 0;
+      padding: 24px 16px;
+      background: var(--sky);
+      color: var(--text);
       font-family: Cambria, Georgia, serif;
-      background: #eaf6ff;
-      color: #233244;
-      max-width: 720px;
-      margin: 40px auto;
-      padding: 20px;
+      line-height: 1.6;
     }
 
     .container {
-      background: white;
-      padding: 28px;
-      border-radius: 16px;
-      box-shadow: 0 4px 16px #00000010;
+      max-width: 720px;
+      margin: 0 auto;
     }
 
-    h1 {
-      color: #2878b5;
+    header {
       text-align: center;
+      margin-bottom: 24px;
     }
 
-    .subtitle {
-      text-align: center;
-      color: #637386;
-    }
-
-    .question {
-      margin: 24px 0;
-      padding: 18px;
-      background: #f7fbff;
-      border: 1px solid #d7e2ec;
-      border-radius: 12px;
-    }
-
-    .question p {
+    .tag {
+      display: inline-block;
+      background: var(--yellow);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-family: "Comic Sans MS", sans-serif;
+      font-size: 13px;
       font-weight: bold;
     }
 
-    label {
-      display: block;
-      padding: 8px;
-      cursor: pointer;
+    h1 {
+      color: var(--blue);
+      font-size: clamp(26px, 5vw, 36px);
+      line-height: 1.2;
     }
 
-    input {
-      margin-right: 8px;
+    .subtitle {
+      color: var(--muted);
     }
 
-    button {
-      background: #2878b5;
-      color: white;
-      border: none;
+    .progress-track {
+      height: 8px;
+      background: #d5e6f3;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 24px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: var(--blue);
+      transition: width 0.3s;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: clamp(20px, 5vw, 32px);
+      margin-top: 18px;
+      box-shadow: 0 6px 20px #2332440a;
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    #topic {
+      background: var(--sky);
       border-radius: 8px;
-      padding: 12px 20px;
-      margin-top: 12px;
-      font-size: 16px;
+      padding: 3px 10px;
+    }
+
+    #question {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      color: var(--text);
+      font: inherit;
       cursor: pointer;
     }
 
-    button:hover {
+    .option:hover:not(:disabled) {
+      border-color: var(--blue);
+      background: #f7fbff;
+    }
+
+    .letter {
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #edf3f8;
+      font-family: "Comic Sans MS", sans-serif;
+      font-weight: bold;
+    }
+
+    .option.selected {
+      border-color: var(--blue);
+      background: var(--sky);
+    }
+
+    .option.correct {
+      border-color: #65b783;
+      background: var(--green);
+    }
+
+    .option.wrong {
+      border-color: #e39b8e;
+      background: var(--red);
+    }
+
+    .option:disabled {
+      opacity: 1;
+      cursor: default;
+    }
+
+    #feedback {
+      display: none;
+      margin-top: 22px;
+      padding: 16px;
+      border-radius: 12px;
+    }
+
+    #feedback.show {
+      display: block;
+    }
+
+    #feedback.correct-feedback {
+      background: var(--green);
+    }
+
+    #feedback.wrong-feedback {
+      background: var(--red);
+    }
+
+    #feedback h3 {
+      margin-top: 0;
+    }
+
+    #feedback p {
+      margin-bottom: 8px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 18px;
+      font: bold 15px "Comic Sans MS", sans-serif;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .primary:hover:not(:disabled) {
       background: #185b8d;
     }
 
-    #result {
-      margin-top: 20px;
-      padding: 16px;
-      border-radius: 10px;
-      background: #fff3bd;
+    .secondary {
+      background: #edf3f8;
+      color: var(--text);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    #results {
       display: none;
+      text-align: center;
     }
 
-    .correct {
-      color: #187443;
+    #finalScore {
+      font-size: 40px;
+      color: var(--blue);
+      font-weight: bold;
     }
 
-    .incorrect {
-      color: #b43d32;
+    @media (max-width: 480px) {
+      .controls .btn {
+        flex: 1;
+      }
     }
   </style>
 </head>
 
 <body>
   <main class="container">
-    <h1>Present Perfect Continuous</h1>
-    <p class="subtitle">
-      5-question grammar quiz
-    </p>
+    <header>
+      <span class="tag">GRAMMAR PRACTICE · 5 QUESTIONS</span>
+      <h1>Present Perfect Continuous</h1>
+      <p class="subtitle">
+        Answer each question and read the explanation
+        before moving on to the next one.
+      </p>
+    </header>
 
-    <form id="quizForm">
+    <div class="progress-track">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
 
-      <section class="question">
-        <p>1. She _____ English for three years.</p>
-        <label><input type="radio" name="q1" value="a"> has been studying</label>
-        <label><input type="radio" name="q1" value="b"> have been studying</label>
-        <label><input type="radio" name="q1" value="c"> is studying</label>
-        <label><input type="radio" name="q1" value="d"> has studying</label>
-        <p id="feedback1"></p>
+    <div class="progress-info">
+      <span id="progressText">Question 1 of 5</span>
+      <span id="scoreText">Score: 0</span>
+    </div>
+
+    <section class="card" id="quizCard">
+      <div class="question-meta">
+        <strong id="questionNumber">QUESTION 01</strong>
+        <span id="topic">Sentence form</span>
+      </div>
+
+      <h2 id="question"></h2>
+      <div class="options" id="options"></div>
+
+      <section id="feedback" aria-live="polite">
+        <h3 id="feedbackTitle"></h3>
+        <p><strong id="answerText"></strong></p>
+        <p id="explanation"></p>
+        <p id="example"></p>
       </section>
 
-      <section class="question">
-        <p>2. Which sentence emphasizes the duration of an activity?</p>
-        <label><input type="radio" name="q2" value="a"> I read yesterday.</label>
-        <label><input type="radio" name="q2" value="b"> I have been reading for two hours.</label>
-        <label><input type="radio" name="q2" value="c"> I will read tomorrow.</label>
-        <label><input type="radio" name="q2" value="d"> I am reading now.</label>
-        <p id="feedback2"></p>
-      </section>
+      <div class="controls">
+        <button class="btn secondary" id="restartBtn" type="button">
+          Start Over
+        </button>
+        <button class="btn primary" id="actionBtn" type="button" disabled>
+          Submit Answer
+        </button>
+      </div>
+    </section>
 
-      <section class="question">
-        <p>3. They have been waiting _____ 9 a.m.</p>
-        <label><input type="radio" name="q3" value="a"> for</label>
-        <label><input type="radio" name="q3" value="b"> during</label>
-        <label><input type="radio" name="q3" value="c"> since</label>
-        <label><input type="radio" name="q3" value="d"> by</label>
-        <p id="feedback3"></p>
-      </section>
-
-      <section class="question">
-        <p>4. Which negative sentence is correct?</p>
-        <label><input type="radio" name="q4" value="a"> He haven't been sleeping well.</label>
-        <label><input type="radio" name="q4" value="b"> He hasn't been sleep well.</label>
-        <label><input type="radio" name="q4" value="c"> He hasn't been sleeping well.</label>
-        <label><input type="radio" name="q4" value="d"> He not has been sleeping well.</label>
-        <p id="feedback4"></p>
-      </section>
-
-      <section class="question">
-        <p>5. Choose the correct question.</p>
-        <label><input type="radio" name="q5" value="a"> How long you have been learning English?</label>
-        <label><input type="radio" name="q5" value="b"> How long have you been learning English?</label>
-        <label><input type="radio" name="q5" value="c"> How long have been you learning English?</label>
-        <label><input type="radio" name="q5" value="d"> How long are you been learning English?</label>
-        <p id="feedback5"></p>
-      </section>
-
-      <button type="button" onclick="checkAnswers()">
-        Submit Answers
-      </button>
-
-      <button type="reset" onclick="resetQuiz()">
+    <section class="card" id="results" aria-live="polite">
+      <h2>Quiz Complete!</h2>
+      <div id="finalScore">0 / 5</div>
+      <p id="resultMessage"></p>
+      <button class="btn primary" id="retryBtn" type="button">
         Try Again
       </button>
-    </form>
-
-    <div id="result" aria-live="polite"></div>
+    </section>
   </main>
 
   <script>
-    const answers = {
-      q1: {
-        answer: "a",
-        explanation: "Use has been + verb-ing with she, he, or it."
+    // Edit this array to change questions and explanations.
+    const questions = [
+      {
+        topic: "Sentence form",
+        question: "She _____ English for three years.",
+        options: [
+          "has been studying",
+          "have been studying",
+          "is been studying",
+          "has studying"
+        ],
+        answer: 0,
+        explanation:
+          "The Present Perfect Continuous uses have/has + been + verb-ing. With she, he, or it, use has.",
+        example:
+          "Example: She has been studying English since 2023."
       },
-      q2: {
-        answer: "b",
-        explanation: "The Present Perfect Continuous often emphasizes how long an activity has continued."
+      {
+        topic: "Meaning and use",
+        question: "Which sentence emphasizes the duration of an activity?",
+        options: [
+          "I read that book yesterday.",
+          "I have been reading for two hours.",
+          "I will read after dinner.",
+          "I am going to read tomorrow."
+        ],
+        answer: 1,
+        explanation:
+          "The tense often emphasizes how long an activity has continued from the past until now, or recently stopped.",
+        example:
+          "For two hours tells us the duration of the reading activity."
       },
-      q3: {
-        answer: "c",
-        explanation: "Use since with a starting point in time. Use for with a duration."
+      {
+        topic: "Since / For",
+        question: "They have been waiting _____ 9 a.m.",
+        options: [
+          "for",
+          "during",
+          "since",
+          "by"
+        ],
+        answer: 2,
+        explanation:
+          "Use since with a starting point in time. Use for with a period or length of time.",
+        example:
+          "Since 9 a.m. = starting point. For three hours = duration."
       },
-      q4: {
-        answer: "c",
-        explanation: "The negative structure is has not been + verb-ing."
+      {
+        topic: "Negative form",
+        question: "Which sentence is grammatically correct?",
+        options: [
+          "He haven't been sleeping well.",
+          "He hasn't been sleep well.",
+          "He hasn't been sleeping well.",
+          "He not has been sleeping well."
+        ],
+        answer: 2,
+        explanation:
+          "The negative structure is subject + have/has + not + been + verb-ing. With he, use has not or hasn't.",
+        example:
+          "Positive: He has been sleeping. Negative: He hasn't been sleeping."
       },
-      q5: {
-        answer: "b",
-        explanation: "Use How long + have/has + subject + been + verb-ing."
+      {
+        topic: "Question form",
+        question: "Choose the correct question.",
+        options: [
+          "How long you have been learning English?",
+          "How long have you been learning English?",
+          "How long have been you learning English?",
+          "How long are you been learning English?"
+        ],
+        answer: 1,
+        explanation:
+          "Put have/has before the subject, followed by been and the verb ending in -ing.",
+        example:
+          "Pattern: How long + have/has + subject + been + verb-ing?"
       }
-    };
+    ];
 
-    function checkAnswers() {
-      let score = 0;
+    const $ = id => document.getElementById(id);
 
-      for (let i = 1; i <= 5; i++) {
-        const questionName = "q" + i;
-        const selected = document.querySelector(
-          'input[name="' + questionName + '"]:checked'
-        );
-        const feedback = document.getElementById("feedback" + i);
+    let current = 0;
+    let selected = null;
+    let score = 0;
+    let answered = false;
 
-        if (!selected) {
-          feedback.textContent = "Please select an answer.";
-          feedback.className = "incorrect";
-          continue;
-        }
+    function renderQuestion() {
+      const q = questions[current];
 
-        if (selected.value === answers[questionName].answer) {
-          score++;
-          feedback.textContent =
-            "Correct! " + answers[questionName].explanation;
-          feedback.className = "correct";
-        } else {
-          feedback.textContent =
-            "Not quite. " + answers[questionName].explanation;
-          feedback.className = "incorrect";
-        }
-      }
+      selected = null;
+      answered = false;
 
-      const result = document.getElementById("result");
-      result.style.display = "block";
-      result.innerHTML =
-        "<h2>Your Score: " + score + " / 5</h2>" +
-        "<p>" +
-        (score === 5
-          ? "Excellent work!"
-          : score >= 3
-          ? "Good effort! Review your answers and try again."
-          : "Keep practicing. You can do it!") +
-        "</p>";
+      $("questionNumber").textContent =
+        "QUESTION " + String(current + 1).padStart(2, "0");
+      $("topic").textContent = q.topic;
+      $("question").textContent = q.question;
+      $("progressText").textContent =
+        `Question ${current + 1} of ${questions.length}`;
+      $("scoreText").textContent = `Score: ${score}`;
+      $("progressBar").style.width =
+        `${current / questions.length * 100}%`;
 
-      result.scrollIntoView({ behavior: "smooth" });
+      $("feedback").className = "";
+      $("feedbackTitle").textContent = "";
+      $("answerText").textContent = "";
+      $("explanation").textContent = "";
+      $("example").textContent = "";
+
+      $("actionBtn").disabled = true;
+      $("actionBtn").textContent = "Submit Answer";
+      $("options").innerHTML = "";
+
+      q.options.forEach((text, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "option";
+
+        const letter = document.createElement("span");
+        letter.className = "letter";
+        letter.textContent = String.fromCharCode(65 + index);
+
+        const label = document.createElement("span");
+        label.textContent = text;
+
+        button.append(letter, label);
+        button.addEventListener("click", () => selectOption(index));
+        $("options").appendChild(button);
+      });
     }
 
-    function resetQuiz() {
-      setTimeout(function () {
-        for (let i = 1; i <= 5; i++) {
-          const feedback = document.getElementById("feedback" + i);
-          feedback.textContent = "";
-          feedback.className = "";
-        }
+    function selectOption(index) {
+      if (answered) return;
 
-        const result = document.getElementById("result");
-        result.style.display = "none";
-        result.innerHTML = "";
-      }, 0);
+      selected = index;
+
+      [...$("options").children].forEach((button, i) => {
+        button.classList.toggle("selected", i === index);
+      });
+
+      $("actionBtn").disabled = false;
     }
+
+    function submitAnswer() {
+      if (selected === null || answered) return;
+
+      const q = questions[current];
+      const isCorrect = selected === q.answer;
+      answered = true;
+
+      if (isCorrect) score++;
+
+      [...$("options").children].forEach((button, i) => {
+        button.disabled = true;
+
+        if (i === q.answer) {
+          button.classList.add("correct");
+        } else if (i === selected) {
+          button.classList.add("wrong");
+        }
+      });
+
+      $("feedback").className =
+        "show " + (isCorrect ? "correct-feedback" : "wrong-feedback");
+
+      $("feedbackTitle").textContent =
+        isCorrect ? "Correct! Well done." : "Not quite. Let's review.";
+
+      $("answerText").textContent =
+        "Correct answer: " + q.options[q.answer];
+
+      $("explanation").textContent = q.explanation;
+      $("example").textContent = q.example;
+
+      $("scoreText").textContent = `Score: ${score}`;
+      $("progressBar").style.width =
+        `${(current + 1) / questions.length * 100}%`;
+
+      $("actionBtn").textContent =
+        current === questions.length - 1 ? "See Results" : "Next Question";
+
+      // The explanation is shown before the learner can continue.
+      $("feedback").scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
+    }
+
+    function nextStep() {
+      if (!answered) {
+        submitAnswer();
+        return;
+      }
+
+      if (current < questions.length - 1) {
+        current++;
+        renderQuestion();
+        $("question").scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      $("quizCard").style.display = "none";
+      $("results").style.display = "block";
+      $("finalScore").textContent = `${score} / ${questions.length}`;
+      $("progressText").textContent = "Quiz completed";
+      $("progressBar").style.width = "100%";
+
+      if (score === questions.length) {
+        $("resultMessage").textContent =
+          "Excellent! You answered every question correctly.";
+      } else if (score >= 3) {
+        $("resultMessage").textContent =
+          "Good effort! Review the explanations for the questions you missed.";
+      } else {
+        $("resultMessage").textContent =
+          "Keep practicing. Review the grammar patterns and try again.";
+      }
+    }
+
+    function restartQuiz() {
+      current = 0;
+      selected = null;
+      score = 0;
+      answered = false;
+
+      $("results").style.display = "none";
+      $("quizCard").style.display = "block";
+      renderQuestion();
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    $("actionBtn").addEventListener("click", nextStep);
+    $("restartBtn").addEventListener("click", restartQuiz);
+    $("retryBtn").addEventListener("click", restartQuiz);
+
+    renderQuestion();
   </script>
 </body>
 </html>
-
